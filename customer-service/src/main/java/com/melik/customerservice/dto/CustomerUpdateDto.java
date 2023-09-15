@@ -1,0 +1,31 @@
+package com.melik.customerservice.dto;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @Author mselvi
+ * @Created 08.09.2023
+ */
+
+@Getter
+@Setter
+public class CustomerUpdateDto {
+
+    @NotNull(message = "Id No Can Not Be Null")
+    private Long id;
+
+    @NotEmpty(message = "First Name Can Not Be Empty")
+    private String firstName;
+
+    @NotEmpty(message = "Last Name Can Not Be Empty")
+    private String lastName;
+
+    @NotNull(message = "Identity No Can Not Be Null")
+    private Long identityNo;
+
+    @NotEmpty(message = "Password Can Not Be Empty")
+    private String password;
+}
