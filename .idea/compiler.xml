@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="customer-service" />
+        <module name="api-gateway" />
+        <module name="creditcard-service" />
+        <module name="account-service" />
+        <module name="identity-service" />
+        <module name="service-discovery" />
+        <module name="logging-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CustomerService" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="CustomerService" options="-parameters" />
+      <module name="account-service" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
+      <module name="creditcard-service" options="-parameters" />
+      <module name="customer-service" options="-parameters" />
+      <module name="identity-service" options="-parameters" />
+      <module name="logging-service" options="-parameters" />
+      <module name="service-discovery" options="-parameters" />
+    </option>
+  </component>
+</project>

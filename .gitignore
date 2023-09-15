@@ -1,0 +1,5 @@
+# Project exclude paths
+/api-gateway/target/
+/identity-service/target/
+/logging-service/target/
+/service-discovery/target/
