@@ -1,7 +1,7 @@
 package com.melik.identityservice.config;
 
 import com.melik.identityservice.security.JwtAuthenticationFilter;
-import com.melik.identityservice.security.JwtUserDetailsService;
+import com.melik.identityservice.service.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPoint authenticationEntyPoint;
     private final JwtAuthenticationFilter authenticationFilter;
-    private final JwtUserDetailsService userDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
 
     public static final String[] PUBLIC_URLS = {"/auth/**",
             "/swagger-ui/**",
@@ -57,7 +57,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(jwtUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return new ProviderManager(authenticationProvider);
