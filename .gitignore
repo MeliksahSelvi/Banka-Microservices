@@ -3,3 +3,7 @@
 /identity-service/target/
 /logging-service/target/
 /service-discovery/target/
+/account-service/target/
+/creditcard-service/target/
+/customer-service/target/
+/.idea
