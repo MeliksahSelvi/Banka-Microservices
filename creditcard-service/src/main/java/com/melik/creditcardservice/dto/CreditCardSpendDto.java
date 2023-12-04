@@ -1,6 +1,7 @@
 package com.melik.creditcardservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +31,6 @@ public class CreditCardSpendDto {
     @NotNull(message = "Amount Can Not Be Null")
     private BigDecimal amount;
 
+    @NotEmpty(message = "Description can not be empty")
     private String description;
 }
