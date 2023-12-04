@@ -1,5 +1,6 @@
 package com.melik.loggingservice.config;
 
+import com.melik.common.module.dto.LogDto;
 import com.melik.loggingservice.model.LogMessage;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -29,18 +30,18 @@ public class KafkaConsumerConfig {
     private String kafkaGroupId;
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, LogMessage> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, LogMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, LogDto> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, LogDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, LogMessage> consumerFactory() {
+    public ConsumerFactory<String, LogDto> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId);
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, LogMessage.class);
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, LogDto.class);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(config);

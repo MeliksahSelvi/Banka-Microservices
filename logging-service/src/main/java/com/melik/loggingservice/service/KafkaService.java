@@ -1,6 +1,6 @@
 package com.melik.loggingservice.service;
 
-import com.melik.loggingservice.dto.LogDto;
+import com.melik.common.module.dto.LogDto;
 import com.melik.loggingservice.mapper.LogMapper;
 import com.melik.loggingservice.model.LogMessage;
 import com.melik.loggingservice.repository.LogMessageRepository;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class KafkaService {
 
     private final LogMessageRepository logMessageRepository;
+    private final LogMapper logMapper;
 
     @KafkaListener(
             topics = "${bank.kafka.topic}",
@@ -29,12 +30,7 @@ public class KafkaService {
     )
     public void listen(@Payload LogDto logDto) {
         log.info("Message received by Logging-Service --> " + logDto.message());
-        saveLogToDb(logDto);
-    }
-
-    private void saveLogToDb(LogDto logDto) {
-
-        LogMessage logMessage = LogMapper.fromLogDto(logDto);
+        LogMessage logMessage = logMapper.fromLogDto(logDto);
         logMessageRepository.save(logMessage);
     }
 }
