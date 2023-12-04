@@ -5,5 +5,8 @@
 /service-discovery/target/
 /account-service/target/
 /creditcard-service/target/
+/user-service/target/
+/common-module/target/
+/config-server/target/
 /customer-service/target/
 /.idea
