@@ -1,13 +1,13 @@
 package com.melik.creditcardservice.service.impl;
 
+import com.melik.common.module.exception.BankException;
+import com.melik.common.module.exception.NotFoundException;
 import com.melik.creditcardservice.domain.CreditCard;
 import com.melik.creditcardservice.domain.CreditCardActivity;
 import com.melik.creditcardservice.dto.*;
 import com.melik.creditcardservice.enums.CardActivityType;
 import com.melik.creditcardservice.enums.ErrorMessage;
 import com.melik.creditcardservice.enums.StatusType;
-import com.melik.creditcardservice.exception.CreditCardActivityException;
-import com.melik.creditcardservice.exception.CreditCardException;
 import com.melik.creditcardservice.mapper.CreditCardActivityMapper;
 import com.melik.creditcardservice.repository.CreditCardActivityRepository;
 import com.melik.creditcardservice.repository.CreditCardRepository;
@@ -80,17 +80,17 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
     private void validateCreditCard(Optional<CreditCard> creditCardOptional) {
         CreditCard creditCard = creditCardOptional.orElseThrow(() -> {
-            throw new CreditCardException(ErrorMessage.INVALID_CARD);
+            throw new BankException(ErrorMessage.INVALID_CARD.getMessage());
         });
 
         if (creditCard.getExpireDate().before(new Date())) {
-            throw new CreditCardException(ErrorMessage.CREDIT_CARD_EXPIRED);
+            throw new BankException(ErrorMessage.CREDIT_CARD_EXPIRED.getMessage());
         }
     }
 
     private void validatedCardLimit(BigDecimal currentAvailableLimit) {
         if (currentAvailableLimit.compareTo(BigDecimal.ZERO) < 0) {
-            throw new CreditCardException(ErrorMessage.INSUFFICIENT_CREDIT_CARD_LIMIT);
+            throw new BankException(ErrorMessage.INSUFFICIENT_CREDIT_CARD_LIMIT.getMessage());
         }
     }
 
@@ -132,7 +132,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
         Optional<CreditCardActivity> activityOptional = creditCardActivityRepository.findById(activityId);
 
         return activityOptional.orElseThrow(() -> {
-            throw new CreditCardActivityException(ErrorMessage.ACTIVITY_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.ACTIVITY_NOT_FOUND.getMessage());
         });
     }
 
@@ -150,7 +150,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
         Optional<CreditCard> creditCardOptional = creditCardRepository.findById(creditCardId);
 
         return creditCardOptional.orElseThrow(() -> {
-            throw new CreditCardException(ErrorMessage.CREDIT_CARD_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.CREDIT_CARD_NOT_FOUND.getMessage());
         });
     }
 
@@ -266,7 +266,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
         return webClientBuilder.build().get()
                 .uri(uriBuilder -> uriBuilder.path("http://customer-service/api/v1/customer/{id}").build(customerId))
                 .headers(h -> h.setBearerAuth(token))
-                .headers(h->h.setContentType(MediaType.APPLICATION_JSON))
+                .headers(h -> h.setContentType(MediaType.APPLICATION_JSON))
                 .retrieve()
                 .bodyToMono(CustomerDto.class)
                 .block();

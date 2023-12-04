@@ -26,7 +26,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Bank" options="-parameters" />
+      <module name="Bank" options="" />
       <module name="CustomerService" options="-parameters" />
       <module name="account-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />

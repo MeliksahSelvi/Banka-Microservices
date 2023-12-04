@@ -1,11 +1,11 @@
 package com.melik.customerservice.service.impl;
 
+import com.melik.common.module.exception.NotFoundException;
 import com.melik.customerservice.domain.Customer;
 import com.melik.customerservice.dto.CustomerDto;
 import com.melik.customerservice.dto.CustomerSaveDto;
 import com.melik.customerservice.dto.CustomerUpdateDto;
 import com.melik.customerservice.enums.ErrorMessage;
-import com.melik.customerservice.exception.CustomerException;
 import com.melik.customerservice.mapper.CustomerMapper;
 import com.melik.customerservice.repository.CustomerRepository;
 import com.melik.customerservice.service.CustomerService;
@@ -94,7 +94,7 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customerOptional = customerRepository.findById(id);
 
         return customerOptional.orElseThrow(() -> {
-            throw new CustomerException(ErrorMessage.CUSTOMER_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.CUSTOMER_NOT_FOUND.getMessage());
         });
     }
 

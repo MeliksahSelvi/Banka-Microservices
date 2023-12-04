@@ -5,10 +5,10 @@ import com.melik.accountservice.dto.AccountDto;
 import com.melik.accountservice.dto.AccountSaveDto;
 import com.melik.accountservice.enums.ErrorMessage;
 import com.melik.accountservice.enums.StatusType;
-import com.melik.accountservice.exception.AccountException;
 import com.melik.accountservice.mapper.AccountMapper;
 import com.melik.accountservice.repository.AccountRepository;
 import com.melik.accountservice.service.AccountService;
+import com.melik.common.module.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.RandomStringUtils;
@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         return accountOptional.orElseThrow(() -> {
-            throw new AccountException(ErrorMessage.ACCOUNT_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND.getMessage());
         });
     }
 

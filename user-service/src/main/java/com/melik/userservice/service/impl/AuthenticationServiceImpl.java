@@ -1,14 +1,15 @@
 package com.melik.userservice.service.impl;
 
+import com.melik.common.module.exception.BankException;
+import com.melik.common.module.exception.NotFoundException;
 import com.melik.userservice.domain.SystemUser;
+import com.melik.userservice.dto.LoginDto;
 import com.melik.userservice.dto.SystemUserDto;
 import com.melik.userservice.dto.SystemUserSaveDto;
 import com.melik.userservice.enums.ErrorMessage;
-import com.melik.userservice.exception.UserException;
 import com.melik.userservice.mapper.UserMapper;
 import com.melik.userservice.repository.SystemUserRepository;
 import com.melik.userservice.security.JwtToken;
-import com.melik.userservice.dto.LoginDto;
 import com.melik.userservice.service.AuthenticationService;
 import com.melik.userservice.service.JwtTokenService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void checkEmailAlreadyUse(String email) {
         boolean exist = systemUserRepository.existsUserByEmail(email);
         if (exist) {
-            throw new UserException(ErrorMessage.EMAIL_IS_ALREADY_USE);
+            throw new BankException(ErrorMessage.EMAIL_IS_ALREADY_USE.getMessage());
         }
     }
 
@@ -73,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void validateUser(LoginDto loginDto) {
         boolean customerIsExist = systemUserRepository.existsUserByEmail(loginDto.getEmail());
         if (!customerIsExist) {
-            throw new UserException(ErrorMessage.USER_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.USER_NOT_FOUND.getMessage());
         }
     }
 }

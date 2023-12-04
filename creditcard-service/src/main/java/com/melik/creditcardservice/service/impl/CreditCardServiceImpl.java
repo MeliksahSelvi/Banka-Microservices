@@ -1,11 +1,11 @@
 package com.melik.creditcardservice.service.impl;
 
+import com.melik.common.module.exception.NotFoundException;
 import com.melik.creditcardservice.domain.CreditCard;
 import com.melik.creditcardservice.dto.CreditCardDto;
 import com.melik.creditcardservice.dto.CreditCardSaveDto;
 import com.melik.creditcardservice.enums.ErrorMessage;
 import com.melik.creditcardservice.enums.StatusType;
-import com.melik.creditcardservice.exception.CreditCardException;
 import com.melik.creditcardservice.mapper.CreditCardMapper;
 import com.melik.creditcardservice.repository.CreditCardRepository;
 import com.melik.creditcardservice.service.CreditCardService;
@@ -80,7 +80,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         Optional<CreditCard> creditCardOptional = creditCardRepository.findById(creditCardId);
 
         return creditCardOptional.orElseThrow(() -> {
-            throw new CreditCardException(ErrorMessage.CREDIT_CARD_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.CREDIT_CARD_NOT_FOUND.getMessage());
         });
     }
 

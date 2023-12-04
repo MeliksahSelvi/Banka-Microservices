@@ -7,12 +7,12 @@ import com.melik.accountservice.dto.MoneyActivityDto;
 import com.melik.accountservice.dto.MoneyActivityRequestDto;
 import com.melik.accountservice.enums.ActivityType;
 import com.melik.accountservice.enums.ErrorMessage;
-import com.melik.accountservice.exception.AccountException;
-import com.melik.accountservice.exception.MoneyException;
 import com.melik.accountservice.mapper.AccountActivityMapper;
 import com.melik.accountservice.repository.AccountActivityRepository;
 import com.melik.accountservice.repository.AccountRepository;
 import com.melik.accountservice.service.AccountActivityService;
+import com.melik.common.module.exception.BankException;
+import com.melik.common.module.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -84,13 +84,13 @@ public class AccountActivityServiceImpl implements AccountActivityService {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
 
         return accountOptional.orElseThrow(() -> {
-            throw new AccountException(ErrorMessage.ACCOUNT_NOT_FOUND);
+            throw new NotFoundException(ErrorMessage.ACCOUNT_NOT_FOUND.getMessage());
         });
     }
 
     private void validateBalance(BigDecimal remainingBalance) {
         if (remainingBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new MoneyException(ErrorMessage.INSUFFICIENT_BALANCE);
+            throw new BankException(ErrorMessage.INSUFFICIENT_BALANCE.getMessage());
         }
     }
 
