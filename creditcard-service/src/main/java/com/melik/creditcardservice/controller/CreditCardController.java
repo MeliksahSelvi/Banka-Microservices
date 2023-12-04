@@ -7,11 +7,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -29,61 +29,61 @@ public class CreditCardController {
     private final CreditCardActivityService creditCardActivityService;
 
     @GetMapping
-    public ApiResponse findAll(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
+    public ResponseEntity findAll(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
         List<CreditCardDto> creditCardDtoList = creditCardService.findAll(pageOptional, sizeOptional);
-        return ApiResponse.of(HttpStatus.OK, "Credit Cards Retrieved", Map.of("creditCardDtoList", creditCardDtoList));
+        return ResponseEntity.ok(creditCardDtoList);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse findById(@PathVariable Long id) {
+    public ResponseEntity findById(@PathVariable Long id) {
         CreditCardDto creditCardDto = creditCardService.findById(id);
-        return ApiResponse.of(HttpStatus.OK, "Credit Card Retrieved", Map.of("creditCardDto", creditCardDto));
+        return ResponseEntity.ok(creditCardDto);
     }
 
     @PostMapping
-    public ApiResponse save(@RequestBody @Valid CreditCardSaveDto creditCardSaveDto) {
+    public ResponseEntity save(@RequestBody @Valid CreditCardSaveDto creditCardSaveDto) {
         CreditCardDto creditCardDto = creditCardService.save(creditCardSaveDto);
-        return ApiResponse.of(HttpStatus.CREATED, "Credit Card Is Created", Map.of("creditCardDto", creditCardDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(creditCardDto);
     }
 
     @PatchMapping("/cancel/{cardId}")
-    public ApiResponse cancel(@PathVariable Long cardId) {
+    public ResponseEntity cancel(@PathVariable Long cardId) {
         creditCardService.cancel(cardId);
-        return ApiResponse.of(HttpStatus.OK, "Credit Card Canceled");
+        return ResponseEntity.ok("Credit Card Cancelled");
     }
 
     @PostMapping("/spend")
-    public ApiResponse spend(@RequestBody @Valid CreditCardSpendDto creditCardSpendDto) {
+    public ResponseEntity spend(@RequestBody @Valid CreditCardSpendDto creditCardSpendDto) {
         CreditCardActivityDto creditCardActivityDto = creditCardActivityService.spend(creditCardSpendDto);
-        return ApiResponse.of(HttpStatus.OK, "Spend Action Is Successfully", Map.of("creditCardActivityDto", creditCardActivityDto));
+        return ResponseEntity.ok(creditCardActivityDto);
     }
 
     @PostMapping("/refund/{activityId}")
-    public ApiResponse refund(@PathVariable Long activityId) {
+    public ResponseEntity refund(@PathVariable Long activityId) {
         CreditCardActivityDto creditCardActivityDto = creditCardActivityService.refund(activityId);
-        return ApiResponse.of(HttpStatus.OK, "Refund Action Is Successfully", Map.of("creditCardActivityDto", creditCardActivityDto));
+        return ResponseEntity.ok(creditCardActivityDto);
     }
 
     @PostMapping("/payment")
-    public ApiResponse payment(@RequestBody @Valid CreditCardPaymentDto creditCardPaymentDto) {
+    public ResponseEntity payment(@RequestBody @Valid CreditCardPaymentDto creditCardPaymentDto) {
         CreditCardActivityDto creditCardActivityDto = creditCardActivityService.payment(creditCardPaymentDto);
-        return ApiResponse.of(HttpStatus.OK, "Payment Action Is Successfully", Map.of("creditCardActivityDto", creditCardActivityDto));
+        return ResponseEntity.ok(creditCardActivityDto);
     }
 
     @GetMapping("/activities/{cardId}")
-    public ApiResponse findAllActivities(
+    public ResponseEntity findAllActivities(
             @PathVariable Long cardId,
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
             Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
 
         List<CreditCardActivityDto> creditCardActivityDtoList = creditCardActivityService.findAllActivities(cardId, startDate, endDate, pageOptional, sizeOptional);
-        return ApiResponse.of(HttpStatus.OK, "Activities Retrieved", Map.of("creditCardActivityDtoList", creditCardActivityDtoList));
+        return ResponseEntity.ok(creditCardActivityDtoList);
     }
 
     @GetMapping("/{cardId}/statements")
-    public ApiResponse statement(@PathVariable Long cardId) {
+    public ResponseEntity statement(@PathVariable Long cardId) {
         CreditCardDetails creditCardDetails = creditCardActivityService.statement(cardId);
-        return ApiResponse.of(HttpStatus.OK, "Card Details Retrieved", Map.of("creditCardDetails", creditCardDetails));
+        return ResponseEntity.ok(creditCardDetails);
     }
 }
