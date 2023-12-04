@@ -1,76 +1,77 @@
 package com.melik.apigateway.filter;
 
-import com.melik.apigateway.enums.ErrorMessage;
-import com.melik.apigateway.exception.RequestException;
-import io.github.resilience4j.retry.annotation.Retry;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.melik.apigateway.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.HttpHeaders;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 /**
  * @Author mselvi
- * @Created 11.09.2023
+ * @Created 01.12.2023
  */
 
-public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
+@Component
+@RequiredArgsConstructor
+public class AuthenticationFilter implements GatewayFilter {
 
-    @Autowired
-    private RouterValidator validator;
-
-    @Autowired
-    private WebClient.Builder webClientBuilder;
+    private final RouterValidator routerValidator;
+    private final JwtUtil jwtUtil;
 
     @Override
-    public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
-            ServerHttpRequest request = exchange.getRequest();
-            if (validator.isSecured.test(request)) {
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
 
-                validateRequestHeader(request);
-
-                String token = getToken(request);
-
-                if (StringUtils.hasText(token)) {
-                    validateTokenFromIdentityService();
-                }
+        if (routerValidator.isSecured.test(request)) {
+            if (this.isAuthMissing(request)) {
+                return this.onError(exchange, HttpStatus.UNAUTHORIZED);
             }
-            return chain.filter(exchange);
-        });
-    }
 
-    private void validateRequestHeader(ServerHttpRequest request) {
-        if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-            throw new RequestException(ErrorMessage.MISS_TOKEN);
+            final String token = this.getAuthHeader(request);
+
+            if (jwtUtil.isInvalid(token)) {
+                return this.onError(exchange, HttpStatus.FORBIDDEN);
+            }
+
+            this.updateRequest(exchange, token);
         }
+        return chain.filter(exchange);
     }
 
-    private String getToken(ServerHttpRequest request) {
+    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(httpStatus);
+        return response.setComplete();
+    }
 
-        String fullToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+    private void updateRequest(ServerWebExchange exchange, String token) {
+        Claims claims = jwtUtil.getAllClaimsFromToken(token);
+        exchange.getRequest().mutate()
+                .header("email", String.valueOf(claims.get("email")))
+                .build();
+    }
 
+    private String getAuthHeader(ServerHttpRequest request) {
+        String fullToken = request.getHeaders().getOrEmpty("Authorization").get(0);
         String token = null;
         if (StringUtils.hasText(fullToken)) {
-            String bearer = "Bearer ";
+            String bearerStr = "Bearer ";
 
-            if (fullToken.startsWith(bearer)) {
-                token = fullToken.substring(bearer.length());
+            if (fullToken.startsWith(bearerStr)) {
+                token = fullToken.substring(bearerStr.length());
             }
         }
         return token;
     }
 
-    @Retry(name = "identity")
-    private void validateTokenFromIdentityService() {
-        webClientBuilder.build().get()
-                .uri("http://identity-service/auth/validate/token")
-                .retrieve();
-    }
-
-    public static class Config {
-
+    private boolean isAuthMissing(ServerHttpRequest request) {
+        return !request.getHeaders().containsKey("Authorization");
     }
 }

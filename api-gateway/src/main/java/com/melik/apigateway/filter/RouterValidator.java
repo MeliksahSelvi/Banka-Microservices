@@ -14,14 +14,17 @@ import java.util.function.Predicate;
 @Component
 public class RouterValidator {
 
-    public static final List<String> openApiEndpoints = List.of("/auth/**",
+    public static final List<String> openApiEndpoints = List.of(
+            "/auth/register",
+            "/auth/login",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/v3/api-docs/**");
+            "/v3/api-docs/**"
+    );
 
 
-    public Predicate<ServerHttpRequest> isSecured=
+    public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
-            .stream()
-                    .noneMatch(uri ->request.getURI().getPath().contains(uri));
+                    .stream()
+                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
 }
