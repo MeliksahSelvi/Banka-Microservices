@@ -49,16 +49,16 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("user-service", r -> r.path("/auth/**")
+                .route("user-service", r -> r.path("/user-service/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("lb://user-service"))
-                .route("account-service", r -> r.path("/api/v1/account/**", "/api/v1/moneytransfer/**")
+                .route("account-service", r -> r.path("/account-service/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("lb://account-service"))
-                .route("creditcard-service", r -> r.path("/api/v1/creditcard/**")
+                .route("creditcard-service", r -> r.path("/creditcard-service/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("lb://creditcard-service"))
-                .route("customer-service", r -> r.path("/api/v1/customer/**")
+                .route("customer-service", r -> r.path("/customer-service/**")
                         .filters(f -> f.filter(authenticationFilter))
                         .uri("lb://customer-service"))
                 .build();
