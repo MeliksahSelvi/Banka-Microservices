@@ -4,21 +4,23 @@ import com.melik.customerservice.domain.Customer;
 import com.melik.customerservice.dto.CustomerDto;
 import com.melik.customerservice.dto.CustomerSaveDto;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author mselvi
  * @Created 31.08.2023
  */
 
+@Component
 public class CustomerMapper {
 
-    public static CustomerDto fromCustomer(Customer customer) {
+    public CustomerDto fromCustomer(Customer customer) {
         CustomerDto customerDto = new CustomerDto();
-        BeanUtils.copyProperties(customer,customerDto);
+        BeanUtils.copyProperties(customer, customerDto);
         return customerDto;
     }
 
-    public static Customer fromSaveDto(CustomerSaveDto customerSaveDto) {
+    public Customer fromSaveDto(CustomerSaveDto customerSaveDto) {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerSaveDto, customer);
         return customer;
