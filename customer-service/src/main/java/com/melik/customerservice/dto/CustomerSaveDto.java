@@ -1,5 +1,6 @@
 package com.melik.customerservice.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.Setter;
 
 /**
  * @Author mselvi
- * @Created 08.09.2023
+ * @Created 01.12.2023
  */
 
 @Getter
