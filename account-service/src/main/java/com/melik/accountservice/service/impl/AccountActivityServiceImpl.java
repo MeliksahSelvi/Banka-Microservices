@@ -32,6 +32,7 @@ public class AccountActivityServiceImpl implements AccountActivityService {
 
     private final AccountRepository accountRepository;
     private final AccountActivityRepository accountActivityRepository;
+    private final AccountActivityMapper accountActivityMapper;
 
     @Override
     @Transactional
@@ -43,7 +44,7 @@ public class AccountActivityServiceImpl implements AccountActivityService {
 
         AccountActivity accountActivity = moneyOut(moneyActivityDto);
 
-        AccountActivityDto accountActivityDto = AccountActivityMapper.fromAccountActivity(accountActivity);
+        AccountActivityDto accountActivityDto = accountActivityMapper.fromAccountActivity(accountActivity);
         return accountActivityDto;
     }
 
@@ -119,7 +120,7 @@ public class AccountActivityServiceImpl implements AccountActivityService {
 
         AccountActivity accountActivity = moneyIn(moneyActivityDto);
 
-        AccountActivityDto accountActivityDto = AccountActivityMapper.fromAccountActivity(accountActivity);
+        AccountActivityDto accountActivityDto = accountActivityMapper.fromAccountActivity(accountActivity);
         return accountActivityDto;
     }
 

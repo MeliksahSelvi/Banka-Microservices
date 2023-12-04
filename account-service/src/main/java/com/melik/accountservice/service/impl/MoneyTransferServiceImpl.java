@@ -27,6 +27,7 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
 
     private final MoneyTransferRepository moneyTransferRepository;
     private final AccountActivityService accountActivityService;
+    private final MoneyTransferMapper moneyTransferMapper;
 
     /*
      * jakarta transaction seçtik çünkü spring transaction sadece bean'ler üzerinde kanal açıyor.
@@ -34,7 +35,7 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
     @Override
     @Transactional
     public MoneyTransferDto transferMoney(MoneyTransferSaveDto moneyTransferSaveDto) {
-        MoneyTransfer moneyTransfer = MoneyTransferMapper.fromSaveDto(moneyTransferSaveDto);
+        MoneyTransfer moneyTransfer = moneyTransferMapper.fromSaveDto(moneyTransferSaveDto);
 
         Long accountIdFrom = moneyTransfer.getAccountIdFrom();
         Long accountIdTo = moneyTransfer.getAccountIdTo();
@@ -51,7 +52,7 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
         moneyTransfer.setTransferDate(new Date());
         moneyTransfer = moneyTransferRepository.save(moneyTransfer);
 
-        MoneyTransferDto moneyTransferDto = MoneyTransferMapper.fromMoneyTransfer(moneyTransfer);
+        MoneyTransferDto moneyTransferDto = moneyTransferMapper.fromMoneyTransfer(moneyTransfer);
 
         return moneyTransferDto;
     }

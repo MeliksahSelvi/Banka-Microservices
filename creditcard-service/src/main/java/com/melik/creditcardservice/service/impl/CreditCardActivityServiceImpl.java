@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -25,11 +26,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static com.melik.creditcardservice.util.Constants.DEFAULT_PAGE;
-import static com.melik.creditcardservice.util.Constants.DEFAULT_SIZE;
+import static com.melik.common.module.util.Constants.DEFAULT_PAGE;
+import static com.melik.common.module.util.Constants.DEFAULT_SIZE;
 
 /**
  * @Author mselvi
@@ -42,6 +42,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
     private final CreditCardRepository creditCardRepository;
     private final CreditCardActivityRepository creditCardActivityRepository;
+    private final CreditCardActivityMapper creditCardActivityMapper;
     private final WebClient.Builder webClientBuilder;
 
     @Override
@@ -61,7 +62,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
         CreditCardActivity creditCardActivity = createCreditCardActivity(amount, description, creditCard.getId(), CardActivityType.SPEND);
 
-        CreditCardActivityDto creditCardActivityDto = CreditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
+        CreditCardActivityDto creditCardActivityDto = creditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
         return creditCardActivityDto;
     }
 
@@ -123,7 +124,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
         CreditCardActivity creditCardActivity = createCreditCardActivity(amount, description, creditCard.getId(), CardActivityType.REFUND);
 
-        CreditCardActivityDto creditCardActivityDto = CreditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
+        CreditCardActivityDto creditCardActivityDto = creditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
         return creditCardActivityDto;
     }
 
@@ -138,8 +139,11 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
     private CreditCard updateCreditCardForRefund(CreditCardActivity oldCreditCardActivity, BigDecimal amount) {
         CreditCard creditCard = getCreditCardById(oldCreditCardActivity.getCreditCardId());
 
-        creditCard = addLimitToCard(creditCard, amount);
-        return creditCard;
+        return switch (oldCreditCardActivity.getCardActivityType()) {
+            case SPEND -> addLimitToCard(creditCard, amount);
+            case PAYMENT -> substractLimitToCard(creditCard, amount);
+            case REFUND -> creditCard;
+        };
     }
 
     private CreditCard getCreditCardById(Long creditCardId) {
@@ -159,6 +163,15 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
         return creditCardRepository.save(creditCard);
     }
 
+    private CreditCard substractLimitToCard(CreditCard creditCard, BigDecimal amount) {
+        BigDecimal currentDebt = creditCard.getCurrentDebt().add(amount);
+        BigDecimal currentAvailableLimit = creditCard.getAvailableCardLimit().subtract(amount);
+
+        creditCard.setCurrentDebt(currentDebt);
+        creditCard.setAvailableCardLimit(currentAvailableLimit);
+        return creditCardRepository.save(creditCard);
+    }
+
     @Override
     @Transactional
     public CreditCardActivityDto payment(CreditCardPaymentDto creditCardPaymentDto) {
@@ -169,7 +182,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
         CreditCardActivity creditCardActivity = createCreditCardActivity(amount, description, creditCardId, CardActivityType.PAYMENT);
 
-        CreditCardActivityDto creditCardActivityDto = CreditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
+        CreditCardActivityDto creditCardActivityDto = creditCardActivityMapper.fromCreditCardActivity(creditCardActivity);
         return creditCardActivityDto;
     }
 
@@ -217,7 +230,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
     }
 
     private List<CreditCardActivityDto> convertActivityListToDtoList(List<CreditCardActivity> activityList) {
-        return activityList.stream().map(CreditCardActivityMapper::fromCreditCardActivity).toList();
+        return activityList.stream().map(creditCardActivityMapper::fromCreditCardActivity).toList();
     }
 
     @Override
@@ -241,26 +254,21 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
     }
 
     private void updateCreditCardDetailsByCustomerInfo(Long customerId, CreditCardDetails creditCardDetails) {
-        CustomerDto customerDto = fetchCustomerDtoFromCustomerService(customerId);
+        CustomerDto customerDto = fetchResponseCustomerService(customerId);
 
         creditCardDetails.setFirstName(customerDto.getFirstName());
         creditCardDetails.setLastName(customerDto.getLastName());
     }
 
-    private CustomerDto fetchCustomerDtoFromCustomerService(Long customerId) {
-        ApiResponse apiResponse = fetchResponseCustomerService(customerId);
-
-        Map<?, ?> responseData = apiResponse.getData();
-        CustomerDto customerDto = (CustomerDto) responseData.get("customerDto");
-        return customerDto;
-    }
-
     @Retry(name = "customer")
-    private ApiResponse fetchResponseCustomerService(Long customerId) {
+    private CustomerDto fetchResponseCustomerService(Long customerId) {
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWxpa3NhaC5zZWx2aTI4MzRAZ21haWwuY29tIiwiaWF0IjoxNzAxNjk4MzE1LCJleHAiOjE3MDE3ODQzMTV9.ovXMoqANwBfAWIFQBVj9B58g_Vmnpp9-T7KGIudP0JLv2qD-eVNdvORcMf8dH-DzTysvQDJ3LAwYjTzT6PvKQQ";
         return webClientBuilder.build().get()
                 .uri(uriBuilder -> uriBuilder.path("http://customer-service/api/v1/customer/{id}").build(customerId))
+                .headers(h -> h.setBearerAuth(token))
+                .headers(h->h.setContentType(MediaType.APPLICATION_JSON))
                 .retrieve()
-                .bodyToMono(ApiResponse.class)
+                .bodyToMono(CustomerDto.class)
                 .block();
     }
 

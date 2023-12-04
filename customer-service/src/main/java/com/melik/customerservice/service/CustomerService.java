@@ -3,7 +3,6 @@ package com.melik.customerservice.service;
 import com.melik.customerservice.dto.CustomerDto;
 import com.melik.customerservice.dto.CustomerSaveDto;
 import com.melik.customerservice.dto.CustomerUpdateDto;
-import com.melik.customerservice.dto.UserDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +23,4 @@ public interface CustomerService {
     CustomerDto findById(Long id);
 
     CustomerDto update(CustomerUpdateDto customerUpdateDto);
-
-    UserDto findUserById(Long id);
-
-    UserDto findUserByIdentityNo(Long id);
-
-    boolean existCustomer(Long identityNo);
 }

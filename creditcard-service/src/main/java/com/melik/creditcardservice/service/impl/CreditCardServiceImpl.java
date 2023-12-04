@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.melik.creditcardservice.util.Constants.DEFAULT_PAGE;
-import static com.melik.creditcardservice.util.Constants.DEFAULT_SIZE;
+import static com.melik.common.module.util.Constants.DEFAULT_PAGE;
+import static com.melik.common.module.util.Constants.DEFAULT_SIZE;
 
 /**
  * @Author mselvi
@@ -37,6 +37,7 @@ import static com.melik.creditcardservice.util.Constants.DEFAULT_SIZE;
 public class CreditCardServiceImpl implements CreditCardService {
 
     private final CreditCardRepository creditCardRepository;
+    private final CreditCardMapper creditCardMapper;
 
     @Override
     public List<CreditCardDto> findAll(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
@@ -65,13 +66,13 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     private List<CreditCardDto> convertListToDtoList(List<CreditCard> creditCardList) {
-        return creditCardList.stream().map(CreditCardMapper::fromCreditCard).toList();
+        return creditCardList.stream().map(creditCardMapper::fromCreditCard).toList();
     }
 
     @Override
     public CreditCardDto findById(Long id) {
         CreditCard creditCard = getCreditCardById(id);
-        CreditCardDto creditCardDto = CreditCardMapper.fromCreditCard(creditCard);
+        CreditCardDto creditCardDto = creditCardMapper.fromCreditCard(creditCard);
         return creditCardDto;
     }
 
@@ -98,7 +99,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
         CreditCard creditCard = createCreditCard(customerId, limit, cutoffDate, dueDate);
 
-        CreditCardDto creditCardDto = CreditCardMapper.fromCreditCard(creditCard);
+        CreditCardDto creditCardDto = creditCardMapper.fromCreditCard(creditCard);
         return creditCardDto;
     }
 

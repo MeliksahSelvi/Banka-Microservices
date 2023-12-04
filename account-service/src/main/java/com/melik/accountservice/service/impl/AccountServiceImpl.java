@@ -19,8 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.melik.accountservice.util.Constans.DEFAULT_PAGE;
-import static com.melik.accountservice.util.Constans.DEFAULT_SIZE;
+import static com.melik.common.module.util.Constants.DEFAULT_PAGE;
+import static com.melik.common.module.util.Constants.DEFAULT_SIZE;
+
 
 /**
  * @Author mselvi
@@ -32,15 +33,14 @@ import static com.melik.accountservice.util.Constans.DEFAULT_SIZE;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
     @Override
     public List<AccountDto> findAll(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
         PageRequest pageRequest = getPageRequest(pageOptional, sizeOptional);
-        List<Account> customerList = accountRepository.findAll(pageRequest).toList();
-
-        List<AccountDto> customerDtoList = convertListToDtoList(customerList);
-
-        return customerDtoList;
+        List<Account> accountList = accountRepository.findAll(pageRequest).toList();
+        List<AccountDto> accountDtoList = convertListToDtoList(accountList);
+        return accountDtoList;
     }
 
     private PageRequest getPageRequest(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {
@@ -61,13 +61,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private List<AccountDto> convertListToDtoList(List<Account> customerList) {
-        return customerList.stream().map(AccountMapper::fromAccount).toList();
+        return customerList.stream().map(accountMapper::fromAccount).toList();
     }
 
     @Override
     public AccountDto findById(Long id) {
         Account accAccount = getAccountById(id);
-        AccountDto accAccountDto = AccountMapper.fromAccount(accAccount);
+        AccountDto accAccountDto = accountMapper.fromAccount(accAccount);
         return accAccountDto;
     }
 
@@ -82,14 +82,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto save(AccountSaveDto accountSaveDto) {
         Account account = createAccount(accountSaveDto);
-        AccountDto accAccountDto = AccountMapper.fromAccount(account);
+        AccountDto accAccountDto = accountMapper.fromAccount(account);
         return accAccountDto;
     }
 
     private Account createAccount(AccountSaveDto accountSaveDto) {
         String ibanNo = getIbanNo();
 
-        Account accAccount = AccountMapper.fromSaveDto(accountSaveDto);
+        Account accAccount = accountMapper.fromSaveDto(accountSaveDto);
         accAccount.setStatusType(StatusType.ACTIVE);
         accAccount.setCustomerId(accountSaveDto.getCustomerId());
         accAccount.setIbanNo(ibanNo);
