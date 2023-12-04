@@ -2,33 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="config-server" />
         <module name="customer-service" />
+        <module name="common-module" />
         <module name="api-gateway" />
         <module name="creditcard-service" />
+        <module name="user-service" />
         <module name="account-service" />
-        <module name="identity-service" />
         <module name="service-discovery" />
         <module name="logging-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="common-modul" target="17" />
       <module name="CustomerService" target="17" />
+      <module name="identity-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Bank" options="-parameters" />
       <module name="CustomerService" options="-parameters" />
       <module name="account-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
+      <module name="common-module" options="-parameters" />
+      <module name="config-server" options="-parameters" />
       <module name="creditcard-service" options="-parameters" />
       <module name="customer-service" options="-parameters" />
       <module name="identity-service" options="-parameters" />
       <module name="logging-service" options="-parameters" />
       <module name="service-discovery" options="-parameters" />
+      <module name="user-service" options="-parameters" />
     </option>
   </component>
 </project>
