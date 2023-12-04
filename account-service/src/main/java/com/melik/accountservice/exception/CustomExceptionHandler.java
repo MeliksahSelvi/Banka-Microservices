@@ -1,17 +1,18 @@
 package com.melik.accountservice.exception;
 
-import com.melik.accountservice.dto.ApiResponse;
-import com.melik.accountservice.dto.LogDto;
-import com.melik.accountservice.service.LogService;
+import com.melik.common.module.dto.LogDto;
+import com.melik.common.module.service.LogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @Author mselvi
@@ -26,25 +27,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     private final LogService logService;
 
     @ExceptionHandler(AccountException.class)
-    public final ApiResponse handleAccountException(AccountException exception, WebRequest webRequest) {
+    public final ResponseEntity handleAccountException(AccountException exception, WebRequest webRequest) {
         String message = exception.getMessage();
         String description = webRequest.getDescription(false);
         log.error(message);
 
-        sendLogToBroker(message, description);
-        return ApiResponse.of(HttpStatus.NOT_FOUND, message, description);
+        CompletableFuture.runAsync(() -> sendLogToBroker(message, description));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(MoneyException.class)
-    public final ApiResponse handleMoneyException(MoneyException exception, WebRequest webRequest) {
+    public final ResponseEntity handleMoneyException(MoneyException exception, WebRequest webRequest) {
         String message = exception.getMessage();
         String description = webRequest.getDescription(false);
         log.error(message);
 
-        sendLogToBroker(message, description);
-        return ApiResponse.of(HttpStatus.BAD_REQUEST, message, description);
+        CompletableFuture.runAsync(() -> sendLogToBroker(message, description));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
-
 
     private void sendLogToBroker(String message, String description) {
         LogDto logDto = new LogDto(message, description, new Date());
