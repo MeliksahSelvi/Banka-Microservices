@@ -1,8 +1,8 @@
-package com.melik.creditcardservice.util;
+package com.melik.common.module.util;
 
 /**
  * @Author mselvi
- * @Created 16.09.2023
+ * @Created 01.12.2023
  */
 
 public class Constants {

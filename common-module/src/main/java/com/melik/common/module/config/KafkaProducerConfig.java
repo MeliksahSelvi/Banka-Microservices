@@ -1,6 +1,6 @@
-package com.melik.identityservice.config;
+package com.melik.common.module.config;
 
-import com.melik.identityservice.dto.LogDto;
+import com.melik.common.module.dto.LogDto;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +16,12 @@ import java.util.Map;
 
 /**
  * @Author mselvi
- * @Created 11.09.2023
+ * @Created 01.12.2023
  */
 
 @Configuration
 @EnableKafka
-public class ProducerConfig {
+public class KafkaProducerConfig {
 
     @Value("${bank.kafka.address}")
     private String kafkaAddress;
