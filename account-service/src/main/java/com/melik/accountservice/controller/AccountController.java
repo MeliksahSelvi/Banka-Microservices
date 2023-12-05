@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/account")
+@RequestMapping(value = "/account", produces = "application/vnd.api.v1+json")
 public class AccountController {
 
     private final AccountService accountService;

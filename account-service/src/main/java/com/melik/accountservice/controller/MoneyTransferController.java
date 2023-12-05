@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/moneytransfer")
+@RequestMapping(value = "/moneytransfer", produces = "application/vnd.api.v1+json")
 public class MoneyTransferController {
 
     private final MoneyTransferService moneyTransferService;

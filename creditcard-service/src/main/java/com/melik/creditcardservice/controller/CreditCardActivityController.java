@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/activity")
+@RequestMapping(value = "/activity", produces = "application/vnd.api.v1+json")
 public class CreditCardActivityController {
 
     private final CreditCardActivityService creditCardActivityService;

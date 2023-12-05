@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/customer")
+@RequestMapping(value = "/customer", produces = "application/vnd.api.v1+json")
 public class CustomerController {
 
     private final CustomerService customerService;
