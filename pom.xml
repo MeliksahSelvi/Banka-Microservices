@@ -37,6 +37,7 @@
         <spring-cloud-resilience.version>3.0.3</spring-cloud-resilience.version>
         <spring-cloud-starter-circuitbreaker-reactor-resilience4j.version>3.0.3</spring-cloud-starter-circuitbreaker-reactor-resilience4j.version>
         <spring-kafka.version>3.0.9</spring-kafka.version>
+        <jasypt-spring-boot.version>3.0.5</jasypt-spring-boot.version>
         <lombok.version>1.18.28</lombok.version>
         <jwt.version>0.9.1</jwt.version>
         <gson.version>2.10.1</gson.version>
@@ -173,6 +174,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt-spring-boot.version}</version>
             </dependency>
 
             <dependency>
