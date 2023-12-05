@@ -2,6 +2,7 @@ package com.melik.creditcardservice.service.impl;
 
 import com.melik.common.module.exception.BankException;
 import com.melik.common.module.exception.NotFoundException;
+import com.melik.creditcardservice.config.InnerRestCallData;
 import com.melik.creditcardservice.domain.CreditCard;
 import com.melik.creditcardservice.domain.CreditCardActivity;
 import com.melik.creditcardservice.dto.*;
@@ -18,9 +19,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,6 +47,7 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
     private final CreditCardRepository creditCardRepository;
     private final CreditCardActivityRepository creditCardActivityRepository;
     private final CreditCardActivityMapper creditCardActivityMapper;
+    private final InnerRestCallData innerRestCallData;
     private final WebClient.Builder webClientBuilder;
 
     @Override
@@ -262,12 +267,24 @@ public class CreditCardActivityServiceImpl implements CreditCardActivityService 
 
     @Retry(name = "customer")
     private CustomerDto fetchResponseCustomerService(Long customerId) {
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZWxpa3NhaC5zZWx2aTI4MzRAZ21haWwuY29tIiwiaWF0IjoxNzAxNjk4MzE1LCJleHAiOjE3MDE3ODQzMTV9.ovXMoqANwBfAWIFQBVj9B58g_Vmnpp9-T7KGIudP0JLv2qD-eVNdvORcMf8dH-DzTysvQDJ3LAwYjTzT6PvKQQ";
-        return webClientBuilder.build().get()
-                .uri(uriBuilder -> uriBuilder.path("http://customer-service/api/v1/customer/{id}").build(customerId))
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJlbWFpbFwiOlwibWVsaWtzYWguc2VsdmkyODM0QGdtYWlsLmNvbVwiLFwicGFzc3dvcmRcIjpcIiQyYSQxMCREY1l5aEdmMUkyQ1NSdWFSMTBQR1BPNml0TDF4cnRXOS8xTHZ1QzJyNU80d3RDcFJGUnRwNlwiLFwiYXV0aG9yaXRpZXNcIjpbe1wicm9sZVwiOlwiY3VzdG9tZXJcIn1dfSIsImlhdCI6MTcwMTc3MjM1MSwiZXhwIjoxNzAxODU4MzUxfQ.y2oIpTjJ7yYDFeFuisQOLvEiXWzch7DaZH6iHjzJMD2-suxI14sRWdNgRZ6LNC26rBM1EanrniAF3wIlHWT8sw";
+
+        return webClientBuilder.build()
+                .method(HttpMethod.valueOf(innerRestCallData.getMethod()))
+                .uri(innerRestCallData.getUri(), uriBuilder -> uriBuilder.build(customerId))
                 .headers(h -> h.setBearerAuth(token))
                 .headers(h -> h.setContentType(MediaType.APPLICATION_JSON))
+                .accept(MediaType.valueOf(innerRestCallData.getAccept()))
                 .retrieve()
+                .onStatus(
+                        s -> s.equals(HttpStatus.UNAUTHORIZED),
+                        clientResponse -> Mono.just(new BankException("Not Authenticated")))
+                .onStatus(
+                        s -> s.equals(HttpStatus.BAD_REQUEST),
+                        clientResponse -> Mono.just(new BankException(clientResponse.statusCode().toString())))
+                .onStatus(
+                        s -> s.equals(HttpStatus.INTERNAL_SERVER_ERROR),
+                        clientResponse -> Mono.just(new Exception(clientResponse.statusCode().toString())))
                 .bodyToMono(CustomerDto.class)
                 .block();
     }

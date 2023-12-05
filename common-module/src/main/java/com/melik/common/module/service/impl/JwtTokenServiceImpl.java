@@ -1,22 +1,24 @@
-package com.melik.userservice.service.impl;
+package com.melik.common.module.service.impl;
 
-import com.melik.userservice.security.JwtToken;
-import com.melik.userservice.security.JwtUserDetails;
-import com.melik.userservice.service.JwtTokenService;
+import com.google.gson.Gson;
+import com.melik.common.module.dto.JwtToken;
+import com.melik.common.module.security.JwtUserDetails;
+import com.melik.common.module.service.JwtTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 /**
  * @Author mselvi
- * @Created 01.12.2023
+ * @Created 05.12.2023
  */
 
 @Component
@@ -30,13 +32,17 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private Long EXPIRE_TIME;
 
     @Override
-    public JwtToken genereteJwtToken(Authentication authentication) {
-        JwtUserDetails jwtUserDetails = (JwtUserDetails) authentication.getPrincipal();
+    public JwtToken genereteJwtToken(Long id, String email, String password) {
 
+        JwtUserDetails jwtUserDetails = new JwtUserDetails(id, email, password);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtUserDetails, null,jwtUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+        String userDetailsAsStr = new Gson().toJson(jwtUserDetails, JwtUserDetails.class);
         Date expireDate = new Date(new Date().getTime() + EXPIRE_TIME);
 
         String token = Jwts.builder()
-                .setSubject(jwtUserDetails.getUsername())
+                .setSubject(userDetailsAsStr)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, APP_KEY)
@@ -63,12 +69,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public String findUserEmailByToken(String token) {
+    public String findUserDetailAsStrByToken(String token) {
         Jws<Claims> claimsJws = parseToken(token);
-        String email = claimsJws
+        String jwtUserDetailsAsStr = claimsJws
                 .getBody()
                 .getSubject();
-        return email;
+        return jwtUserDetailsAsStr;
     }
 
     private Jws<Claims> parseToken(String token) {

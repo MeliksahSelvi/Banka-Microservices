@@ -1,8 +1,8 @@
 package com.melik.userservice.service;
 
+import com.melik.common.module.dto.JwtToken;
 import com.melik.userservice.dto.SystemUserDto;
 import com.melik.userservice.dto.SystemUserSaveDto;
-import com.melik.userservice.security.JwtToken;
 import com.melik.userservice.dto.LoginDto;
 
 /**

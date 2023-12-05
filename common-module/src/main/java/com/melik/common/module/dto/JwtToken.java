@@ -1,11 +1,11 @@
-package com.melik.userservice.security;
+package com.melik.common.module.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @Author mselvi
- * @Created 01.12.2023
+ * @Created 05.12.2023
  */
 
 @Getter

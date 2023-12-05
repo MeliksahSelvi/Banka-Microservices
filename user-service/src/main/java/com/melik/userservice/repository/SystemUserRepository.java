@@ -4,6 +4,8 @@ import com.melik.userservice.domain.SystemUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * @Author mselvi
  * @Created 01.12.2023
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
 
-    boolean existsUserByEmail(String email);
+    Optional<SystemUser> findByEmail(String email);
 
-    SystemUser findByEmail(String email);
+    boolean existsByEmail(String email);
 }

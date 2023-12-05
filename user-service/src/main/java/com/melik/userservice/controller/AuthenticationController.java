@@ -1,9 +1,9 @@
 package com.melik.userservice.controller;
 
+import com.melik.common.module.dto.JwtToken;
 import com.melik.userservice.dto.LoginDto;
 import com.melik.userservice.dto.SystemUserDto;
 import com.melik.userservice.dto.SystemUserSaveDto;
-import com.melik.userservice.security.JwtToken;
 import com.melik.userservice.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

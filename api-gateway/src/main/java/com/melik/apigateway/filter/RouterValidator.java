@@ -14,9 +14,9 @@ import java.util.function.Predicate;
 @Component
 public class RouterValidator {
 
-    public static final List<String> openApiEndpoints = List.of(
-            "/auth/register",
-            "/auth/login",
+    public static final List<String> openApiEndpoints = List.of(//todo make private?
+            "/user-service/auth/login",
+            "/user-service/auth/register",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**"

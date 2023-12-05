@@ -1,4 +1,4 @@
-package com.melik.userservice.security;
+package com.melik.common.module.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 /**
  * @Author mselvi
- * @Created 01.12.2023
+ * @Created 05.12.2023
  */
 
 @Component

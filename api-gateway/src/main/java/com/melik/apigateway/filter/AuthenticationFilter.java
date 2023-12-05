@@ -40,7 +40,7 @@ public class AuthenticationFilter implements GatewayFilter {
                 return this.onError(exchange, HttpStatus.FORBIDDEN);
             }
 
-            this.updateRequest(exchange, token);
+//            this.updateRequest(exchange, token);
         }
         return chain.filter(exchange);
     }
@@ -53,8 +53,9 @@ public class AuthenticationFilter implements GatewayFilter {
 
     private void updateRequest(ServerWebExchange exchange, String token) {
         Claims claims = jwtUtil.getAllClaimsFromToken(token);
+        String userDetailsAsStr = claims.getSubject();
         exchange.getRequest().mutate()
-                .header("email", String.valueOf(claims.get("email")))
+                .header("userDetails", userDetailsAsStr)
                 .build();
     }
 

@@ -39,6 +39,7 @@
         <spring-kafka.version>3.0.9</spring-kafka.version>
         <lombok.version>1.18.28</lombok.version>
         <jwt.version>0.9.1</jwt.version>
+        <gson.version>2.10.1</gson.version>
         <javab-bind.version>2.3.1</javab-bind.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     </properties>
@@ -166,6 +167,12 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
             </dependency>
 
             <dependency>
