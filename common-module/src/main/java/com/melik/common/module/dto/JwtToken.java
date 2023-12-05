@@ -1,15 +1,16 @@
 package com.melik.common.module.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @Author mselvi
  * @Created 05.12.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtToken {
 
     private Long userId;

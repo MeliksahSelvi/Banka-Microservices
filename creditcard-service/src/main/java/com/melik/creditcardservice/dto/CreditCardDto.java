@@ -1,7 +1,6 @@
 package com.melik.creditcardservice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,8 +10,10 @@ import java.util.Date;
  * @Created 08.09.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreditCardDto {
 
     private Long id;

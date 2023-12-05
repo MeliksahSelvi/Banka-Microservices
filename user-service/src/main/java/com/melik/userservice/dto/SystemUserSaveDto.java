@@ -2,16 +2,17 @@ package com.melik.userservice.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @Author mselvi
  * @Created 01.12.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SystemUserSaveDto {
 
     @NotEmpty(message = "Email cannot be empty")

@@ -3,8 +3,7 @@ package com.melik.creditcardservice.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,8 +13,10 @@ import java.util.Date;
  * @Created 08.09.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreditCardSpendDto {
 
     @NotNull(message = "Card No Can Not Be Null")

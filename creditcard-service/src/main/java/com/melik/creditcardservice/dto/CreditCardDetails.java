@@ -1,8 +1,6 @@
 package com.melik.creditcardservice.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -13,8 +11,8 @@ import java.util.List;
  * @Created 08.09.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
 @RequiredArgsConstructor
 public class CreditCardDetails {
 

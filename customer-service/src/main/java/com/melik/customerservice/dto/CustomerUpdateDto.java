@@ -2,16 +2,17 @@ package com.melik.customerservice.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @Author mselvi
  * @Created 01.12.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerUpdateDto {
 
     @NotNull(message = "Id No Can Not Be Null")

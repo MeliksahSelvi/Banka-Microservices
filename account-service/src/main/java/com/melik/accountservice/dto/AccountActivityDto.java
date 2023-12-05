@@ -1,8 +1,7 @@
 package com.melik.accountservice.dto;
 
 import com.melik.accountservice.enums.ActivityType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,8 +11,10 @@ import java.util.Date;
  * @Created 08.09.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountActivityDto {
 
     private Long accountId;

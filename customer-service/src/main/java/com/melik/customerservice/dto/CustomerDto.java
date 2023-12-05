@@ -1,15 +1,16 @@
 package com.melik.customerservice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @Author mselvi
  * @Created 01.12.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerDto {
 
     private Long id;

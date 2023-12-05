@@ -3,8 +3,7 @@ package com.melik.accountservice.dto;
 import com.melik.accountservice.enums.AccountType;
 import com.melik.accountservice.enums.CurrencyType;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,8 +12,10 @@ import java.math.BigDecimal;
  * @Created 08.09.2023
  */
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountSaveDto {
 
     @NotNull(message = "Customer Id Can Not Be Null")
