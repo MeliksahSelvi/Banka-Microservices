@@ -12,4 +12,6 @@ public interface JwtTokenService {
     JwtToken genereteJwtToken(Long id,String email, String password);
 
     String findUserDetailAsStrByToken(String token);
+
+    boolean isTokenExpired(String token);
 }

@@ -23,7 +23,7 @@ public class JwtUtil {
     }
 
     private boolean isTokenExpired(String token) {
-        return this.getAllClaimsFromToken(token).getExpiration().before(new Date());
+        return this.getAllClaimsFromToken(token).getExpiration().before(new Date(System.currentTimeMillis()));
     }
 
     public Claims getAllClaimsFromToken(String token) {

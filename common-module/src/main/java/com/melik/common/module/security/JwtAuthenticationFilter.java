@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getToken(request);
 
-        if (!StringUtils.hasText(token)) {
+        if (!StringUtils.hasText(token) || jwtTokenService.isTokenExpired(token)) {
             arrangementResponse(request, response, filterChain);
             return;
         }

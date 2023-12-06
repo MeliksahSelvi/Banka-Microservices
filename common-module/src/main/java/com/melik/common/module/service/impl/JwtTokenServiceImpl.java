@@ -35,34 +35,25 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     public JwtToken genereteJwtToken(Long id, String email, String password) {
 
         JwtUserDetails jwtUserDetails = new JwtUserDetails(id, email, password);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtUserDetails, null,jwtUserDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtUserDetails, null, jwtUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         String userDetailsAsStr = new Gson().toJson(jwtUserDetails, JwtUserDetails.class);
-        Date expireDate = new Date(new Date().getTime() + EXPIRE_TIME);
 
         String token = Jwts.builder()
                 .setSubject(userDetailsAsStr)
-                .setIssuedAt(new Date())
-                .setExpiration(expireDate)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_TIME))
                 .signWith(SignatureAlgorithm.HS512, APP_KEY)
                 .compact();
 
-        String fullToken = generateFullToken(token);
-
-        JwtToken jwtToken = createJwtToken(fullToken, jwtUserDetails.getId());
-
+        JwtToken jwtToken = createJwtToken(token, jwtUserDetails.getId());
         return jwtToken;
     }
 
-    private String generateFullToken(String token) {
-        String bearer = "Bearer ";
-        return bearer + token;
-    }
-
-    private JwtToken createJwtToken(String fullToken, Long userId) {
+    private JwtToken createJwtToken(String token, Long userId) {
         JwtToken jwtToken = new JwtToken();
-        jwtToken.setToken(fullToken);
+        jwtToken.setToken(token);
         jwtToken.setTokenIssuedTime(EXPIRE_TIME);
         jwtToken.setUserId(userId);
         return jwtToken;
@@ -83,4 +74,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .parseClaimsJws(token);
         return claimsJws;
     }
+
+    @Override
+    public boolean isTokenExpired(String token) {
+        Jws<Claims> claimsJws = parseToken(token);
+        Date expirationDate = claimsJws.getBody().getExpiration();
+        return expirationDate.before(new Date(System.currentTimeMillis()));
+    }
+
 }
