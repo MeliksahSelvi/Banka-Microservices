@@ -1,6 +1,7 @@
 package com.melik.common.module.service.impl;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melik.common.module.dto.JwtToken;
 import com.melik.common.module.security.JwtUserDetails;
 import com.melik.common.module.service.JwtTokenService;
@@ -31,14 +32,16 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Value("${bank.jwt.security.expire.time}")
     private Long EXPIRE_TIME;
 
+    private final ObjectMapper objectMapper;
+
     @Override
-    public JwtToken genereteJwtToken(Long id, String email, String password) {
+    public JwtToken genereteJwtToken(Long id, String email, String password) throws JsonProcessingException {
 
         JwtUserDetails jwtUserDetails = new JwtUserDetails(id, email, password);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtUserDetails, null, jwtUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-        String userDetailsAsStr = new Gson().toJson(jwtUserDetails, JwtUserDetails.class);
+        String userDetailsAsStr = objectMapper.writeValueAsString(jwtUserDetails);
 
         String token = Jwts.builder()
                 .setSubject(userDetailsAsStr)

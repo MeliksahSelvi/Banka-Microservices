@@ -1,5 +1,6 @@
 package com.melik.userservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.melik.common.module.dto.JwtToken;
 import com.melik.common.module.exception.BankException;
 import com.melik.common.module.exception.NotFoundException;
@@ -57,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JwtToken login(LoginDto loginDto) {
+    public JwtToken login(LoginDto loginDto) throws JsonProcessingException {
         SystemUser systemUser = validateUser(loginDto);
 
         JwtToken jwtToken = jwtTokenService.genereteJwtToken(systemUser.getId(),systemUser.getEmail(),systemUser.getPassword());

@@ -1,6 +1,7 @@
 package com.melik.common.module.security;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melik.common.module.dto.ErrorResponse;
 import com.melik.common.module.service.JwtTokenService;
 import jakarta.servlet.FilterChain;
@@ -29,12 +30,14 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
+    private final ObjectMapper objectMapper;
     private static final List<String> openApiEndpoints = List.of(
             "/auth/login",
             "/auth/register",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**");
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -89,9 +92,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private JwtUserDetails getJwtUserDetailsFromToken(String token) {
+    private JwtUserDetails getJwtUserDetailsFromToken(String token) throws JsonProcessingException {
         String jwtUserDetailsAsStr = jwtTokenService.findUserDetailAsStrByToken(token);
-        return new Gson().fromJson(jwtUserDetailsAsStr, JwtUserDetails.class);
+        return objectMapper.readValue(jwtUserDetailsAsStr, JwtUserDetails.class);
     }
 
     private void returnErrorResponse(HttpServletResponse response) throws IOException {
@@ -102,7 +105,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .build();
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(new Gson().toJson(errorResponse, ErrorResponse.class));
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 
     private void setAuthenticationToContext(JwtUserDetails userDetails) {

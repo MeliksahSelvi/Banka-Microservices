@@ -1,5 +1,6 @@
 package com.melik.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.melik.common.module.dto.JwtToken;
 import com.melik.userservice.dto.LoginDto;
 import com.melik.userservice.dto.SystemUserDto;
@@ -32,7 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity userLogin(@RequestBody LoginDto loginDto) {
+    public ResponseEntity userLogin(@RequestBody LoginDto loginDto) throws JsonProcessingException {
         JwtToken jwtToken = authenticationService.login(loginDto);
         return ResponseEntity.ok(jwtToken);
     }

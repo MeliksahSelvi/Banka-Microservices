@@ -1,5 +1,6 @@
 package com.melik.common.module.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.melik.common.module.dto.JwtToken;
 
 /**
@@ -9,7 +10,7 @@ import com.melik.common.module.dto.JwtToken;
 
 public interface JwtTokenService {
 
-    JwtToken genereteJwtToken(Long id,String email, String password);
+    JwtToken genereteJwtToken(Long id,String email, String password) throws JsonProcessingException;
 
     String findUserDetailAsStrByToken(String token);
 

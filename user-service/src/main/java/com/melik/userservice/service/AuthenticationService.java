@@ -1,5 +1,6 @@
 package com.melik.userservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.melik.common.module.dto.JwtToken;
 import com.melik.userservice.dto.SystemUserDto;
 import com.melik.userservice.dto.SystemUserSaveDto;
@@ -14,5 +15,5 @@ public interface AuthenticationService {
 
     SystemUserDto register(SystemUserSaveDto systemUserSaveDto);
 
-    JwtToken login(LoginDto loginDto);
+    JwtToken login(LoginDto loginDto) throws JsonProcessingException;
 }
