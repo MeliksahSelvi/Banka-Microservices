@@ -1,7 +1,9 @@
 package com.melik.account.service.moneytransfer.entity;
 
+import com.melik.account.service.account.entity.Account;
 import com.melik.account.service.common.model.BaseEntity;
 import com.melik.account.service.common.valueobject.Money;
+import com.melik.account.service.common.valueobject.StatusType;
 import com.melik.account.service.moneytransfer.valueobject.TransferType;
 
 import java.time.LocalDateTime;
@@ -17,7 +19,7 @@ public class MoneyTransfer extends BaseEntity<Long> {
     private final Long accountIdTo;
     private final Money amount;
     private final TransferType transferType;
-    private LocalDateTime transferDate;
+    private final LocalDateTime transferDate;
     private String description;
 
     public static Builder builder() {
@@ -26,6 +28,7 @@ public class MoneyTransfer extends BaseEntity<Long> {
 
     private MoneyTransfer(Builder builder) {
         setId(builder.id);
+        setStatusType(builder.statusType);
         accountIdFrom = builder.accountIdFrom;
         accountIdTo = builder.accountIdTo;
         amount = builder.amount;
@@ -58,6 +61,10 @@ public class MoneyTransfer extends BaseEntity<Long> {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static final class Builder {
         private Long id;
         private Long accountIdFrom;
@@ -66,6 +73,7 @@ public class MoneyTransfer extends BaseEntity<Long> {
         private TransferType transferType;
         private LocalDateTime transferDate;
         private String description;
+        private StatusType statusType;
 
         private Builder() {
         }
@@ -102,6 +110,11 @@ public class MoneyTransfer extends BaseEntity<Long> {
 
         public Builder description(String val) {
             description = val;
+            return this;
+        }
+
+        public Builder statusType(StatusType val) {
+            statusType = val;
             return this;
         }
 

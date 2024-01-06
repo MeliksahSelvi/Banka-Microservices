@@ -34,7 +34,7 @@ public class MoneyActivityWithdrawUseCaseHandler implements UseCaseHandler<Accou
     public AccountActivity handle(MoneyActivity moneyActivity) {
         var accountFrom = accountPort.retrieve(AccountRetrieve.builder().accountId(moneyActivity.getAccountId()).build());
 
-        Money newBalance = accountFrom.getCurrentBalance().substract(new Money(moneyActivity.getAmount()));
+        Money newBalance = accountFrom.getCurrentBalance().substract(moneyActivity.getAmount());
         validateBalance(newBalance);
 
         accountFrom.setCurrentBalance(newBalance);
@@ -46,6 +46,7 @@ public class MoneyActivityWithdrawUseCaseHandler implements UseCaseHandler<Accou
 
     private void validateBalance(Money remainingBalance) {
         if (!remainingBalance.isGreaterThanZero()) {
+            log.error("Insufficent Balance During The Withdraw Action!");
             throw new AccountDomainBusinessException("Insufficent Balance During The Withdraw Action!");
         }
     }

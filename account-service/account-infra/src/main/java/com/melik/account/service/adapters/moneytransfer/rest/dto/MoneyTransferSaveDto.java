@@ -1,5 +1,6 @@
 package com.melik.account.service.adapters.moneytransfer.rest.dto;
 
+import com.melik.account.service.common.valueobject.Money;
 import com.melik.account.service.moneytransfer.usecase.MoneyTransferCase;
 import com.melik.account.service.moneytransfer.valueobject.TransferType;
 import jakarta.validation.constraints.NotNull;
@@ -43,7 +44,7 @@ public class MoneyTransferSaveDto {
         return MoneyTransferCase.builder()
                 .accountIdFrom(accountIdFrom)
                 .accountIdTo(accountIdTo)
-                .amount(amount)
+                .amount(new Money(amount))
                 .description(description)
                 .transferType(transferType)
                 .build();

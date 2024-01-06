@@ -34,7 +34,7 @@ public class MoneyActivityDepositUseCaseHandler implements UseCaseHandler<Accoun
     public AccountActivity handle(MoneyActivity moneyActivity) {
         var accountTo = accountPort.retrieve(AccountRetrieve.builder().accountId(moneyActivity.getAccountId()).build());
 
-        Money newBalance = accountTo.getCurrentBalance().add(new Money(moneyActivity.getAmount()));
+        Money newBalance = accountTo.getCurrentBalance().add(moneyActivity.getAmount());
         validateBalance(newBalance);
 
         accountTo.setCurrentBalance(newBalance);
@@ -46,6 +46,7 @@ public class MoneyActivityDepositUseCaseHandler implements UseCaseHandler<Accoun
 
     private void validateBalance(Money remainingBalance) {
         if (!remainingBalance.isGreaterThanZero()) {
+            log.error("Insufficent Balance During The Deposit Action!");
             throw new AccountDomainBusinessException("Insufficent Balance During The Deposit Action!");
         }
     }

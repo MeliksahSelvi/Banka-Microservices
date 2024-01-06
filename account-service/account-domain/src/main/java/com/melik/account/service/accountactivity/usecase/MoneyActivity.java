@@ -2,10 +2,9 @@ package com.melik.account.service.accountactivity.usecase;
 
 import com.melik.account.service.accountactivity.valueobject.ActivityType;
 import com.melik.account.service.common.model.UseCase;
+import com.melik.account.service.common.valueobject.Money;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 /**
  * @Author mselvi
@@ -17,6 +16,6 @@ import java.math.BigDecimal;
 public class MoneyActivity implements UseCase {
 
     private Long accountId;
-    private BigDecimal amount;
+    private Money amount;
     private ActivityType activityType;
 }

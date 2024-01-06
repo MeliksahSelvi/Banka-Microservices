@@ -1,11 +1,10 @@
 package com.melik.account.service.moneytransfer.usecase;
 
-import com.melik.account.service.moneytransfer.valueobject.TransferType;
 import com.melik.account.service.common.model.UseCase;
+import com.melik.account.service.common.valueobject.Money;
+import com.melik.account.service.moneytransfer.valueobject.TransferType;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 /**
  * @Author mselvi
@@ -18,7 +17,7 @@ public class MoneyTransferCase implements UseCase {
 
     private Long accountIdFrom;
     private Long accountIdTo;
-    private BigDecimal amount;
+    private Money amount;
     private TransferType transferType;
     private String description;
 }

@@ -2,6 +2,7 @@ package com.melik.account.service.adapters.accountactivity.rest.dto;
 
 import com.melik.account.service.accountactivity.usecase.MoneyActivity;
 import com.melik.account.service.accountactivity.valueobject.ActivityType;
+import com.melik.account.service.common.valueobject.Money;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,7 @@ public class MoneyActivityRequestDto {
     public MoneyActivity toModel() {
         return MoneyActivity.builder()
                 .accountId(accountId)
-                .amount(amount)
+                .amount(new Money(amount))
                 .activityType(activityType)
                 .build();
     }

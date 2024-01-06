@@ -1,6 +1,6 @@
 package com.melik.account.service.adapters.moneytransfer.jpa.entity;
 
-import com.melik.account.service.common.model.BaseEntity;
+import com.melik.account.service.common.model.AbstractEntity;
 import com.melik.account.service.common.valueobject.Money;
 import com.melik.account.service.moneytransfer.entity.MoneyTransfer;
 import com.melik.account.service.moneytransfer.valueobject.TransferType;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "money_transfer")
-public class MoneyTransferEntity extends BaseEntity {
+public class MoneyTransferEntity extends AbstractEntity {
 
     @Column(name = "ID_ACCOUNT_FROM")
     private Long accountIdFrom;
@@ -31,7 +31,6 @@ public class MoneyTransferEntity extends BaseEntity {
     @Column(name = "AMOUNT", precision = 19, scale = 2)
     private BigDecimal amount;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TRANSFER_DATE")
     private LocalDateTime transferDate;
 
@@ -45,6 +44,7 @@ public class MoneyTransferEntity extends BaseEntity {
     public MoneyTransfer toModel() {
         return MoneyTransfer.builder()
                 .id(super.getId())
+                .statusType(super.getStatusType())
                 .accountIdFrom(accountIdFrom)
                 .accountIdTo(accountIdTo)
                 .amount(new Money(amount))
