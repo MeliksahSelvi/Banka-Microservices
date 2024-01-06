@@ -10,4 +10,8 @@ public class AccountDomainBusinessException extends RuntimeException{
     public AccountDomainBusinessException(String message) {
         super(message);
     }
+
+    public AccountDomainBusinessException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

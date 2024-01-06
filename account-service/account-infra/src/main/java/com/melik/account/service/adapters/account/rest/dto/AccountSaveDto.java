@@ -3,6 +3,7 @@ package com.melik.account.service.adapters.account.rest.dto;
 import com.melik.account.service.account.usecase.AccountSave;
 import com.melik.account.service.account.valueobject.AccountType;
 import com.melik.account.service.account.valueobject.CurrencyType;
+import com.melik.account.service.common.valueobject.Money;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -41,7 +42,7 @@ public class AccountSaveDto {
         return AccountSave.builder()
                 .customerId(customerId)
                 .accountType(accountType)
-                .currentBalance(currentBalance)
+                .currentBalance(new Money(currentBalance))
                 .currencyType(currencyType)
                 .build();
     }

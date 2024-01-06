@@ -24,12 +24,12 @@ public class AccountActivityDataAdapter implements AccountActivityPort {
 
     @Override
     public AccountActivity persist(MoneyActivity moneyActivity, Money newBalance) {
-        var accountActivity = new AccountActivityEntity();
-        accountActivity.setAccountId(moneyActivity.getAccountId());
-        accountActivity.setActivityType(moneyActivity.getActivityType());
-        accountActivity.setAmount(moneyActivity.getAmount());
-        accountActivity.setCurrentBalance(newBalance.getAmount());
-        accountActivity.setTransactionDate(LocalDateTime.now());
-        return accountActivityRepository.save(accountActivity).toModel();
+        var accountActivityEntity = new AccountActivityEntity();
+        accountActivityEntity.setAccountId(moneyActivity.getAccountId());
+        accountActivityEntity.setActivityType(moneyActivity.getActivityType());
+        accountActivityEntity.setAmount(moneyActivity.getAmount().getAmount());
+        accountActivityEntity.setCurrentBalance(newBalance.getAmount());
+        accountActivityEntity.setTransactionDate(LocalDateTime.now());
+        return accountActivityRepository.save(accountActivityEntity).toModel();
     }
 }

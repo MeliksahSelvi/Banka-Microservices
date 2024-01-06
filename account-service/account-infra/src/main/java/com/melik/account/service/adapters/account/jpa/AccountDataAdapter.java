@@ -8,7 +8,6 @@ import com.melik.account.service.account.usecase.AccountSave;
 import com.melik.account.service.adapters.account.jpa.entity.AccountEntity;
 import com.melik.account.service.adapters.account.jpa.repository.AccountRepository;
 import com.melik.account.service.common.exception.AccountDomainBusinessException;
-import com.melik.account.service.common.valueobject.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,17 +46,17 @@ public class AccountDataAdapter implements AccountPort {
         Optional<AccountEntity> accountEntity = accountRepository.findById(accountRetrieve.getAccountId());
         return accountEntity
                 .map(AccountEntity::toModel)
-                .orElseThrow(
-                        () -> new AccountDomainBusinessException("Account Not Found!")
-                );
+                .orElseThrow(() -> new AccountDomainBusinessException("Account Not Found!"));
     }
 
     @Override
     public Account persist(AccountSave accountSave) {
         var accountEntity = new AccountEntity();
-        BeanUtils.copyProperties(accountSave, accountEntity);
+        accountEntity.setCustomerId(accountSave.getCustomerId());
+        accountEntity.setCurrentBalance(accountSave.getCurrentBalance().getAmount());
+        accountEntity.setCurrencyType(accountSave.getCurrencyType());
+        accountEntity.setAccountType(accountSave.getAccountType());
         accountEntity.setIbanNo(createRandomIbanNo());
-        accountEntity.setStatusType(StatusType.ACTIVE);
         return accountRepository.save(accountEntity).toModel();
     }
 
@@ -64,6 +64,7 @@ public class AccountDataAdapter implements AccountPort {
     public void update(Account account) {
         var accountEntity = new AccountEntity();
         BeanUtils.copyProperties(account, accountEntity);
+        accountEntity.setUpdatedAt(LocalDateTime.now());
         accountRepository.save(accountEntity);
     }
 

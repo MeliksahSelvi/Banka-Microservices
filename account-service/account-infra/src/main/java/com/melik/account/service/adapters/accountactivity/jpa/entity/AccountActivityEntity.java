@@ -2,7 +2,7 @@ package com.melik.account.service.adapters.accountactivity.jpa.entity;
 
 import com.melik.account.service.accountactivity.entity.AccountActivity;
 import com.melik.account.service.accountactivity.valueobject.ActivityType;
-import com.melik.account.service.common.model.BaseEntity;
+import com.melik.account.service.common.model.AbstractEntity;
 import com.melik.account.service.common.valueobject.Money;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "account_activity")
-public class AccountActivityEntity extends BaseEntity {
+public class AccountActivityEntity extends AbstractEntity {
 
     @Column(name = "ID_ACCOUNT")
     private Long accountId;
@@ -28,7 +28,6 @@ public class AccountActivityEntity extends BaseEntity {
     @Column(name = "AMOUNT", precision = 19, scale = 2)
     private BigDecimal amount;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TRANSACTION_DATE")
     private LocalDateTime transactionDate;
 
@@ -42,6 +41,7 @@ public class AccountActivityEntity extends BaseEntity {
     public AccountActivity toModel() {
         return AccountActivity.builder()
                 .id(super.getId())
+                .statusType(super.getStatusType())
                 .amount(new Money(amount))
                 .activityType(activityType)
                 .currentBalance(new Money(currentBalance))

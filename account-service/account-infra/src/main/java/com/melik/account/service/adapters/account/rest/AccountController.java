@@ -51,9 +51,9 @@ public class AccountController {
     }
 
     @PatchMapping("/cancel/{accountId}")
-    public ResponseEntity cancel(@PathVariable Long accountId) {
+    public ResponseEntity<String> cancel(@PathVariable Long accountId) {
         accountCancelVoidUseCaseHandler.handle(toUseCase(accountId));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Account Cancelled");
     }
 
     private AccountRetrieveAll toUseCase(Optional<Integer> pageOptional, Optional<Integer> sizeOptional) {

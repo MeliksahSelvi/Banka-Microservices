@@ -19,18 +19,17 @@ public class Account extends BaseEntity<Long> {
     private final AccountType accountType;
     private Money currentBalance;
     private final String ibanNo;
-    private StatusType statusType;
     private LocalDateTime cancelDate;
 
 
     private Account(Builder builder) {
         setId(builder.id);
+        setStatusType(builder.statusType);
         customerId = builder.customerId;
         ibanNo = builder.ibanNo;
         currentBalance = builder.currentBalance;
         currencyType = builder.currencyType;
         accountType = builder.accountType;
-        statusType = builder.statusType;
         cancelDate = builder.cancelDate;
     }
 
@@ -58,16 +57,8 @@ public class Account extends BaseEntity<Long> {
         return accountType;
     }
 
-    public StatusType getStatusType() {
-        return statusType;
-    }
-
     public LocalDateTime getCancelDate() {
         return cancelDate;
-    }
-
-    public void setStatusType(StatusType statusType) {
-        this.statusType = statusType;
     }
 
     public void setCancelDate(LocalDateTime cancelDate) {

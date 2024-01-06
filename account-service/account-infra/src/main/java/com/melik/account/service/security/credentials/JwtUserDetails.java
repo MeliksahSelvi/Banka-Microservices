@@ -17,6 +17,8 @@ public class JwtUserDetails implements UserDetails {
     private String email;
     private String password;
 
+    public JwtUserDetails(){}
+
     public JwtUserDetails(Long id, String email, String password) {
         this.id = id;
         this.email = email;

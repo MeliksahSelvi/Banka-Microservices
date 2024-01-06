@@ -14,7 +14,6 @@ import java.util.Optional;
 @Data
 @Builder
 public class AccountRetrieveAll implements UseCase {
-
     private Optional<Integer> pageOptional;
     private Optional<Integer> sizeOptional;
 }

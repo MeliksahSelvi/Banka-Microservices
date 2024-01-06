@@ -2,6 +2,7 @@ package com.melik.account.service.security.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.melik.account.service.common.exception.AccountDomainBusinessException;
 import com.melik.account.service.common.rest.ErrorResponse;
 import com.melik.account.service.security.credentials.JwtUserDetails;
 import com.melik.account.service.security.util.JwtTokenUtil;
@@ -10,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,14 +28,15 @@ import java.util.List;
  */
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final ObjectMapper objectMapper;
     private static final List<String> openApiEndpoints = List.of(
-            "/auth/login",
-            "/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/register",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**");
@@ -52,14 +54,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getToken(request);
 
         if (!StringUtils.hasText(token) || jwtTokenUtil.isTokenExpired(token)) {
-            arrangementResponse(request, response, filterChain);
+            arrangementResponse(response);
+            filterChain.doFilter(request, response);
             return;
         }
 
         JwtUserDetails userDetails = getJwtUserDetailsFromToken(token);
 
         if (userDetails == null) {
-            arrangementResponse(request, response, filterChain);
+            arrangementResponse(response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -87,15 +91,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return token;
     }
 
-    private void arrangementResponse(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    private void arrangementResponse(HttpServletResponse response) throws IOException {
         SecurityContextHolder.clearContext();
         returnErrorResponse(response);
-        filterChain.doFilter(request, response);
     }
 
-    private JwtUserDetails getJwtUserDetailsFromToken(String token) throws JsonProcessingException {
+    private JwtUserDetails getJwtUserDetailsFromToken(String token){
         String jwtUserDetailsAsStr = jwtTokenUtil.findUserDetailAsStrByToken(token);
-        return objectMapper.readValue(jwtUserDetailsAsStr, JwtUserDetails.class);
+        try {
+            return objectMapper.readValue(jwtUserDetailsAsStr, JwtUserDetails.class);
+        } catch (JsonProcessingException e) {
+            log.error("Could not create JwtUserDetails json!", e);
+            throw new AccountDomainBusinessException("Could not create JwtUserDetails json!", e);
+        }
     }
 
     private void returnErrorResponse(HttpServletResponse response) throws IOException {

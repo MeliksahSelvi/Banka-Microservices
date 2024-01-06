@@ -1,8 +1,10 @@
 package com.melik.account.service.accountactivity.entity;
 
+import com.melik.account.service.account.entity.Account;
 import com.melik.account.service.accountactivity.valueobject.ActivityType;
 import com.melik.account.service.common.model.BaseEntity;
 import com.melik.account.service.common.valueobject.Money;
+import com.melik.account.service.common.valueobject.StatusType;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class AccountActivity extends BaseEntity<Long> {
 
     AccountActivity(Builder builder) {
         setId(builder.id);
+        setStatusType(builder.statusType);
         accountId = builder.accountId;
         amount = builder.amount;
         transactionDate = builder.transactionDate;
@@ -59,6 +62,7 @@ public class AccountActivity extends BaseEntity<Long> {
         private LocalDateTime transactionDate;
         private Money currentBalance;
         private ActivityType activityType;
+        private StatusType statusType;
 
         private Builder() {
         }
@@ -90,6 +94,11 @@ public class AccountActivity extends BaseEntity<Long> {
 
         public Builder activityType(ActivityType val) {
             activityType = val;
+            return this;
+        }
+
+        public Builder statusType(StatusType val) {
+            statusType = val;
             return this;
         }
 

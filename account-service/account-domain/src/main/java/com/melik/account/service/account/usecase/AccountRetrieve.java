@@ -12,6 +12,5 @@ import lombok.Data;
 @Data
 @Builder
 public class AccountRetrieve implements UseCase {
-
     private Long accountId;
 }

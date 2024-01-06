@@ -3,7 +3,7 @@ package com.melik.account.service.adapters.account.jpa.entity;
 import com.melik.account.service.account.entity.Account;
 import com.melik.account.service.account.valueobject.AccountType;
 import com.melik.account.service.account.valueobject.CurrencyType;
-import com.melik.account.service.common.model.BaseEntity;
+import com.melik.account.service.common.model.AbstractEntity;
 import com.melik.account.service.common.valueobject.Money;
 import com.melik.account.service.common.valueobject.StatusType;
 import jakarta.persistence.*;
@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "account")
-public class AccountEntity extends BaseEntity {
+public class AccountEntity extends AbstractEntity {
 
-    @Column(name = "ID_CUS_CUSTOMER")
+    @Column(name = "ID_CUSTOMER")
     private Long customerId;
 
     @Column(name = "IBAN_NO", length = 26)
@@ -42,16 +42,12 @@ public class AccountEntity extends BaseEntity {
     private AccountType accountType;
 
     @Column(name = "CANCEL_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime cancelDate;
-
-    @Column(nullable = false)
-    private StatusType statusType;
 
     public Account toModel() {
         return Account.builder()
                 .id(super.getId())
-                .statusType(statusType)
+                .statusType(super.getStatusType())
                 .customerId(customerId)
                 .currentBalance(new Money(currentBalance))
                 .ibanNo(ibanNo)

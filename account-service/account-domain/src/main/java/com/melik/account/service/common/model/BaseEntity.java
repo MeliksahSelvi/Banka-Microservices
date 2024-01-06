@@ -1,5 +1,7 @@
 package com.melik.account.service.common.model;
 
+import com.melik.account.service.common.valueobject.StatusType;
+
 import java.util.Objects;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Objects;
 
 public abstract class BaseEntity<ID> {
     private ID id;
+    private StatusType statusType;
 
     public ID getId() {
         return id;
@@ -16,6 +19,14 @@ public abstract class BaseEntity<ID> {
 
     public void setId(ID id) {
         this.id = id;
+    }
+
+    public StatusType getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(StatusType statusType) {
+        this.statusType = statusType;
     }
 
     @Override

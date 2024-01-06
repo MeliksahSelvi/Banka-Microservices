@@ -1,5 +1,6 @@
 package com.melik.account.service.common.model;
 
+import com.melik.account.service.common.valueobject.StatusType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class AbstractEntity {
 
     @Id
     @Column
@@ -25,9 +26,13 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
 
     @LastModifiedDate
     @Column
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS_TYPE", length = 20)
+    private StatusType statusType = StatusType.ACTIVE;
 }
