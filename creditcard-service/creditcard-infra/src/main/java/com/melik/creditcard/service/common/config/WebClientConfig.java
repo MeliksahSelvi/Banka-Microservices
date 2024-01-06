@@ -1,4 +1,4 @@
-package com.melik.creditcardservice.config;
+package com.melik.creditcard.service.common.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * @Author mselvi
- * @Created 11.09.2023
+ * @Created 04.01.2024
  */
 
 @Configuration
