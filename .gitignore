@@ -1,11 +1,12 @@
 # Project exclude paths
 /api-gateway/target/
-/identity-service/target/
-/logging-service/target/
 /service-discovery/target/
-/account-service/target/
-/creditcard-service/target/
-/user-service/target/
-/common-module/target/
 /config-server/target/
-/customer-service/target/
+/user-service/user-domain/target
+/user-service/user-infra/target
+/account-service/account-domain/target
+/account-service/account-infra/target
+/creditcard-service/creditcard-domain/target
+/creditcard-service/creditcard-infra/target
+/customer-service/customer-domain/target
+/customer-service/customer-infra/target

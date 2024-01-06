@@ -10,7 +10,9 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/account-service/account-domain/account-application-service/pom.xml" />
+        <option value="$PROJECT_DIR$/common-module/pom.xml" />
         <option value="$PROJECT_DIR$/identity-service/pom.xml" />
+        <option value="$PROJECT_DIR$/logging-service/pom.xml" />
       </set>
     </option>
   </component>

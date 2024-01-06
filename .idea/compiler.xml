@@ -9,21 +9,24 @@
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
         <module name="account-infra" />
-        <module name="customer-service" />
-        <module name="common-module" />
+        <module name="customer-domain" />
+        <module name="customer-infra" />
+        <module name="user-domain" />
+        <module name="creditcard-infra" />
         <module name="api-gateway" />
-        <module name="creditcard-service" />
-        <module name="user-service" />
         <module name="service-discovery" />
-        <module name="logging-service" />
+        <module name="creditcard-domain" />
+        <module name="user-infra" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="account-application-service" target="17" />
       <module name="account-domain-core" target="17" />
       <module name="common-modul" target="17" />
+      <module name="common-module" target="17" />
       <module name="CustomerService" target="17" />
       <module name="identity-service" target="17" />
+      <module name="logging-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -38,12 +41,18 @@
       <module name="api-gateway" options="-parameters" />
       <module name="common-module" options="-parameters" />
       <module name="config-server" options="-parameters" />
-      <module name="creditcard-service" options="-parameters" />
-      <module name="customer-service" options="-parameters" />
+      <module name="creditcard-domain" options="-parameters" />
+      <module name="creditcard-infra" options="-parameters" />
+      <module name="creditcard-service" options="" />
+      <module name="customer-domain" options="-parameters" />
+      <module name="customer-infra" options="-parameters" />
+      <module name="customer-service" options="" />
       <module name="identity-service" options="-parameters" />
       <module name="logging-service" options="-parameters" />
       <module name="service-discovery" options="-parameters" />
-      <module name="user-service" options="-parameters" />
+      <module name="user-domain" options="-parameters" />
+      <module name="user-infra" options="-parameters" />
+      <module name="user-service" options="" />
     </option>
   </component>
 </project>
